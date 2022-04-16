@@ -1,0 +1,193 @@
+﻿<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport"
+          content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>
+        Intro to MapView - Create a 2D map | Sample | ArcGIS API for JavaScript
+        4.23
+    </title>
+    <style>
+
+        html,
+        body,
+        #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            body
+
+        {
+            position: relative;
+        }
+
+        .top {
+            box-sizing: border-box;
+            height: 70px;
+            width: 100%;
+            background-color: rgba(192, 236, 255, 0.821);
+            color: white;
+            padding-left: 40px;
+            box-sizing: border-box;
+        }
+
+            .top b {
+                line-height: 70px;
+                font-size: 40px;
+            }
+
+            .top i {
+                line-height: 70px;
+                font-size: 10px;
+            }
+
+        #other {
+            height: 200px;
+            position: absolute;
+            z-index: 1;
+            left: 15%;
+            top: 30%;
+            width: 17%;
+            height: 10%;
+        }
+
+        #final {
+            height: 350px;
+            position: absolute;
+            z-index: 1;
+            left: 15%;
+            top: 41%;
+            width: 17%;
+            height: 25%;
+        }
+        }
+    </style>
+    <link rel="stylesheet"
+          href="https://js.arcgis.com/4.23/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.23/"></script>
+    <script>require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/FeatureLayer",
+        "esri/widgets/Legend",
+        "esri/widgets/ScaleBar",
+         "esri/widgets/Home",
+        "esri/widgets/Search",
+        "esri/widgets/LayerList",
+        "esri/widgets/Print",
+
+        "esri/widgets/BasemapGallery"
+
+
+      ], function (Map, MapView, FeatureLayer, Legend, ScaleBar,Home,Search,LayerList,Print,BasemapGallery) {
+        var flayer = new FeatureLayer({
+          url: "https://www.geosceneonline.cn/server/rest/services/Hosted/%E5%85%A8%E5%9B%BD%E5%90%84%E7%9C%81%E5%B9%B3%E5%9D%87%E9%A2%84%E6%9C%9F%E5%AF%BF%E5%91%BD/FeatureServer",
+          title: "全国各省2000及2010年度平均预期寿命",
+          popupTemplate: {
+            title: "全国各省2000及2010年度平均预期寿命",
+            lastEditInfoEnabled: false,
+            content: [
+              {
+                type: "fields",
+                fieldInfos: [
+                  {
+                    fieldName: "name"
+                  },
+
+                  {
+                    fieldName: "type"
+                  }
+                ]
+              }
+            ]
+          }
+        });
+
+        var map1 = new Map({
+          basemap: "topo-vector"
+          //layers: [flayer]
+        });
+
+        map1.layers.add(flayer);
+
+        var view1 = new MapView({
+          container: "viewDiv",
+          map: map1,
+          zoom: 4,
+          center: [100, 36] // longitude, latitude
+        });
+
+        var legend1 = new Legend({
+          view: view1,
+         layerInfos:[{
+           layer:flayer,
+           title:"全国各省2000及2010年度平均预期寿命"
+         }]
+        });
+        view1.ui.add(legend1, "bottom-right");
+
+        let scaleBar1 = new ScaleBar({
+          view: view1,
+          style: "line",
+          unit: "metric"
+        });
+        view1.ui.add(scaleBar1, {
+          position: "bottom-left"
+        });
+
+        let homeWidget = new Home({
+  view: view1
+});
+
+// adds the home widget to the top left corner of the MapView
+view1.ui.add(homeWidget, "top-left");
+
+        const searchWidget = new Search({
+        view: view1
+         });
+
+       view1.ui.add(searchWidget, {
+       position: "top-left",
+       index: 2
+       });
+
+       let layerList1 = new LayerList({
+       view: view1
+       });
+       view1.ui.add(layerList1, {position: "bottom-right"
+        });
+
+        const print1 = new Print({
+          view: view1,
+          container: "other",
+          printServiceUrl:
+            "https://utility.arcgisonline.com/arcgis/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task"
+        });
+        view1.ui.add(print1, {position: "top-right"});
+
+
+
+        let basemapGallery = new BasemapGallery({
+         view: view1,
+         container: "final"
+         });
+        view1.ui.add(basemapGallery, {
+        position: "top-left"
+         });
+
+
+      });</script>
+</head>
+<body>
+
+
+    <div id="basemapGalleryDiv"></div>
+    <div class="top">
+        <b>全国各省2000及2010年度平均预期寿命</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <i>来看看人类预期寿命吧</i>
+    </div>
+    <div id="viewDiv"></div>
+    <div id="other"></div>
+</body>
+</html>
